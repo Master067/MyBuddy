@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OtpVerificationActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OTP \n Verification"
+        android:textSize="30dp"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center"
+        android:layout_above="@+id/otp"
+        android:layout_marginBottom="40dp"
+        />
+    <EditText
+        android:id="@+id/otp"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter OTP"
+        android:inputType="number"
+        android:layout_centerInParent="true"
+        android:gravity="center"/>
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SUBMIT"
+        android:layout_below="@+id/otp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+    <TextView
+        android:id="@+id/wrong_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wrong NO.?"
+        android:layout_below="@+id/submit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"/>
+    <TextView
+        android:id="@+id/resend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resend"
+        android:layout_toEndOf="@+id/otp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"/>
+
+
+
+</RelativeLayout>

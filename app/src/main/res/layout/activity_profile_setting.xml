@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileSetting">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar_color"/>
+    <RelativeLayout
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_layout"
+        android:layout_below="@id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/profile_image"
+            android:src="@drawable/default_profile_image"
+            android:layout_marginTop="45dp"
+            android:layout_centerHorizontal="true"/>
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/set_profil_button"
+            android:src="@drawable/cam"
+            android:layout_alignBottom="@+id/profile_image"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/button_round"/>
+
+        <ProgressBar
+            android:id="@+id/image_progress_bar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/input_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_layout"
+        android:hint="Name"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:maxLength="20"/>
+
+    <EditText
+        android:id="@+id/input_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_name"
+        android:hint="Status"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:maxLength="20"/>
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_status"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="SAVE"
+        android:background="@color/toolbar_color"></Button>
+
+
+</RelativeLayout>

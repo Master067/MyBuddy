@@ -25,20 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText phoneCode;     // 1st we declare our components.
     EditText mobileNo;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
 
-        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-
-        if (firebaseUser!=null) //AutoLogin Code
-        {
-            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.example.mybuddy.Adapter.MessageAdapter;
 import com.example.mybuddy.model.Chat;
 import com.example.mybuddy.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -107,6 +109,17 @@ public class MessageActivity extends AppCompatActivity {
         chatListRef= FirebaseDatabase.getInstance().getReference().child("ChatList");
         currentUserID=fuser.getUid();
 
+        userRef.child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                currentUserName=snapshot.child("name").getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         intent=getIntent();
 
         userid=intent.getStringExtra("id");
@@ -156,14 +169,40 @@ public class MessageActivity extends AppCompatActivity {
         String currentDateTime=sdf.format(new Date());
         final long timeInMillis=ConvertDateTimeIntoMillis(currentDateTime);
 
-        HashMap<String,Object>hashMap=new HashMap<>();
+        final HashMap<String,Object>hashMap=new HashMap<>();
         hashMap.put("sender",sender);
         hashMap.put("receiver",receiver);
         hashMap.put("message",message);
         hashMap.put("date",timeInMillis+"");
+        chatRef.child(sender).push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
 
-        chatRef.child(sender).push().setValue(hashMap);
-        chatRef.child(receiver).push().setValue(hashMap);
+                chatRef.child(receiver).push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        chatListRef.child(sender).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(!snapshot.hasChild(receiver)){
+
+                                    chatListRef.child(sender).child(receiver).child("NameForSearch").setValue(userNameForSearch);
+                                    chatListRef.child(receiver).child(sender).child("NameForSearch").setValue(currentUserName);
+                                }
+                                chatListRef.child(sender).child(receiver).child("Time").setValue(timeInMillis);
+                                chatListRef.child(receiver).child(sender).child("Time").setValue(timeInMillis);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
 
     }
 

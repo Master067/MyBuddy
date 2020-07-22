@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class OtpVerificationActivity extends AppCompatActivity {
 
     Button submitButton;
-    EditText inputOtp;
+    EditText inputOtp;                          // 1st we declare important components.
     TextView resend,wrong;
 
     ProgressDialog dialog;
@@ -51,7 +51,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
          submitButton=findViewById(R.id.submit);
          inputOtp=findViewById(R.id.otp);
-         resend=findViewById(R.id.resend);
+         resend=findViewById(R.id.resend);                        //2nd we intiallize them.
         wrong=findViewById(R.id.wrong_no);
 
 
@@ -118,10 +118,10 @@ public class OtpVerificationActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
-        sendVerificationCode(number);
+        sendVerificationCode(number);                 // 3rd we send(get) OTP
     }
 
-    private void sendVerificationCode(String number) {
+    private void sendVerificationCode(String number) {                  // 3rd so this will run.
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 number,
                 60,
@@ -133,8 +133,8 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            String code=phoneAuthCredential.getSmsCode();
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {    // 5th we recieve the OTP
+            String code=phoneAuthCredential.getSmsCode();                                //5th Now it is set automatically Or type it .
             if(code!=null)
             {
                 inputOtp.setText(code);
@@ -142,13 +142,13 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 dialog.setMessage("Please Wait While we are Verifying");
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
-                verifyVerificationCode(code);
+                verifyVerificationCode(code);                                 // 6th Now it is send for verification.
             }
 
         }
 
         @Override
-        public void onVerificationFailed(FirebaseException e) {
+        public void onVerificationFailed(FirebaseException e) {            // 8th
             dialog.dismiss();
             resend.setClickable(true);
             Toast.makeText(OtpVerificationActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -156,7 +156,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
         @Override
         public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(verificationId, forceResendingToken);
+            super.onCodeSent(verificationId, forceResendingToken);                                                   //4th this will run.
             dialog.dismiss();
             Toast.makeText(OtpVerificationActivity.this, "OTP sent", Toast.LENGTH_SHORT).show();
             resend.setClickable(false);
@@ -178,20 +178,20 @@ public class OtpVerificationActivity extends AppCompatActivity {
         }
     };
 
-    private void verifyVerificationCode(String code) {
+    private void verifyVerificationCode(String code) {                    // 6th  this is done.
         PhoneAuthCredential credential=PhoneAuthProvider.getCredential(mVerificationId ,code);
         signInWithPhoneAuthCredential(credential);
     }
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {                     // 7th this is  done.
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 dialog.dismiss();
                 if(task.isSuccessful()){
 
-                    SharedPreferences.Editor edit=getSharedPreferences("Phone",MODE_PRIVATE).edit();
-                    edit.putString("number",number);
+                    SharedPreferences.Editor edit=getSharedPreferences("Phone",MODE_PRIVATE).edit();     // means shared storage
+                    edit.putString("number",number);                                                         // here we creating a file named "Phone" in which we store "number" in key-value format.
                     edit.apply();
 
                     Intent intent=new Intent(OtpVerificationActivity.this,MainActivity.class);

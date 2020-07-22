@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     CircleImageView profile_image;
     TextView username;
     FirebaseAuth auth;
-    FirebaseUser current_user;
+    FirebaseUser current_user;                                               // 1st we do this.
 
     String current_user_ID;
     DatabaseReference rootRef,buddiesRef;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         username=findViewById(R.id.username);
 
         auth=FirebaseAuth.getInstance();
-        current_user=auth.getCurrentUser();
+        current_user=auth.getCurrentUser();                                  // 2nd we intiallize.
         current_user_ID=current_user.getUid();
         rootRef= FirebaseDatabase.getInstance().getReference();
         buddiesRef=rootRef.child("Buddies").child(current_user_ID);
@@ -74,14 +74,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
-        rootRef.child("Users").child(current_user_ID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        rootRef.child("Users").child(current_user_ID).addValueEventListener(new ValueEventListener() {    // 5th we fetch the data
+            @Override                                                                                // and then show username
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {                          //  and image.
                 if(dataSnapshot.hasChild("name")){
                     username.setText(dataSnapshot.child("name").getValue().toString());
                 }
 
-                if(dataSnapshot.hasChild("image") && !dataSnapshot.child("image").getValue().toString().equals("default")){
+                if(dataSnapshot.hasChild("image")){
                     Picasso.get().load(dataSnapshot.child("image").getValue().toString()).placeholder(R.drawable.ic_account_circle).into(profile_image);
                 }
             }
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {                                       //  6th Now we open ProfileView.
                 Intent intent=new Intent(MainActivity.this,ProfileView.class);
                 intent.putExtra("userId",current_user_ID);
                 startActivity(intent);
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         username.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {                                                //  6th Now we open ProfileView.
                 Intent intent=new Intent(MainActivity.this,ProfileView.class);
                 intent.putExtra("userId",current_user_ID);
                 startActivity(intent);
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewPager=findViewById(R.id.view_pager);
 
         ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new ChatsFragment(),"Chats");
+        viewPagerAdapter.addFragment(new ChatsFragment(),"Chats");                     // 7th now we are adding fragments.
         viewPagerAdapter.addFragment(new BuddiesFragment(),"Buddies");
         viewPagerAdapter.addFragment(new GroupsFragment(),"Groups");
 
@@ -124,12 +124,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu,menu);       // 8th now we are creating above menu.
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {          // 8th now we are creating above menu.
         switch (item.getItemId()){
 
             case R.id.logout:
@@ -190,17 +190,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onStart() {
+    protected void onStart() {               //  3rd (Actually at the beggining).
         super.onStart();
-        if(current_user!=null){
+        if(current_user!=null){                // means if you login first time then you to have to set your profile.
             verifyUser();
         }
     }
 
     private void verifyUser() {
-        rootRef.child("Users").child(current_user_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+        rootRef.child("Users").child(current_user_ID).addListenerForSingleValueEvent(new ValueEventListener() {  // make 1st child Users.
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {                  // 4th to set your profile.
                 if(!dataSnapshot.child("name").exists()){
                     Intent intent=new Intent(MainActivity.this,ProfileSetting.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_NEW_TASK);

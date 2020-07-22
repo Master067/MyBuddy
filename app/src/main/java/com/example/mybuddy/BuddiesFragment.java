@@ -94,7 +94,7 @@ public class BuddiesFragment extends Fragment {
 
                 final String usersIDs=getRef(postion).getKey();
 
-                Toast.makeText(getContext(), usersIDs, Toast.LENGTH_SHORT).show();
+
                 userRef.child(usersIDs).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -104,7 +104,6 @@ public class BuddiesFragment extends Fragment {
                             String retName=dataSnapshot.child("name").getValue().toString();
                             String retStatus=dataSnapshot.child("status").getValue().toString();
 
-                            Toast.makeText(getContext(), retName, Toast.LENGTH_SHORT).show();
 
                             holder.userName.setText(retName);
 

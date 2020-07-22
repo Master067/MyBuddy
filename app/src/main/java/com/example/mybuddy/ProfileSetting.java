@@ -55,7 +55,7 @@ public class ProfileSetting extends AppCompatActivity {
     String current_user_ID;
     FirebaseAuth auth;
     DatabaseReference rootRef;
-    ProgressBar imageProgressBar;
+    ProgressBar imageProgressBar;                                      //1st we declare
     Toolbar toolbar;
 
     StorageReference userProfileImagesRef;
@@ -71,14 +71,14 @@ public class ProfileSetting extends AppCompatActivity {
 
         profileImage=findViewById(R.id.profile_image);
         setProfileImage=findViewById(R.id.set_profil_button);
-        username=findViewById(R.id.input_name);
+        username=findViewById(R.id.input_name);                                 // 2nd we intiallize.
         userStatus=findViewById(R.id.input_status);
         saveButton=findViewById(R.id.save_button);
         imageProgressBar=findViewById(R.id.image_progress_bar);
         toolbar=findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Profile Setting");
+        getSupportActionBar().setTitle("Profile Setting");                   // setting a toolbaar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -90,10 +90,10 @@ public class ProfileSetting extends AppCompatActivity {
         userProfileImagesRef= FirebaseStorage.getInstance().getReference().child("profile images");
         loadingBar=new ProgressDialog(ProfileSetting.this);
 
-        loadProfileImage();
+        loadProfileImage();           //3rd if image is there then it is loaded.
 
 
-        setProfileImage.setOnClickListener(new View.OnClickListener() {
+        setProfileImage.setOnClickListener(new View.OnClickListener() {    // 4th otherwise we start this.
             @Override
             public void onClick(View view) {
                 startCropActivity();
@@ -104,10 +104,10 @@ public class ProfileSetting extends AppCompatActivity {
             public void onClick(View view) {
                 saveSetting();
             }
-        });
+        });      //5th
     }
 
-    private void saveSetting() {
+    private void saveSetting() {                     //   5th
         String name=username.getText().toString();
         String status=userStatus.getText().toString();
         if(name.isEmpty()){
@@ -129,7 +129,7 @@ public class ProfileSetting extends AppCompatActivity {
         SharedPreferences prefs= getSharedPreferences("Phone",MODE_PRIVATE);
         String phoneNumber =prefs.getString("number","");
 
-        HashMap<String,Object> profileMap=new HashMap<>();
+        HashMap<String,Object> profileMap=new HashMap<>();              // adding this hashMap in below of "Users"  (i.e. child of rootRef).
         profileMap.put("uid",current_user_ID);
         profileMap.put("name",name);
         profileMap.put("status",status);
@@ -194,8 +194,8 @@ public class ProfileSetting extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
+        super.onActivityResult(requestCode, resultCode, data);                                  //6th (at last) this will run.
+                                                                                                //inorder to save image URL in database.
         if(requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result=CropImage.getActivityResult(data);
             if(resultCode==RESULT_OK){

@@ -60,8 +60,7 @@ public class ChatsFragment extends Fragment {
         chatListRef= FirebaseDatabase.getInstance().getReference().child("ChatList");
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true
-        );
+        linearLayoutManager.setStackFromEnd(true);
         myChatList.setLayoutManager(linearLayoutManager);
 
         fab_add_buddy = chatView.findViewById(R.id.fab_add_buddy);

@@ -58,7 +58,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/show_message_layout"
             android:layout_alignParentEnd="true"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:text="hi"/>
 
 
     </RelativeLayout>

@@ -63,7 +63,7 @@ public class BuddiesFragment extends Fragment {
         buddyRef= FirebaseDatabase.getInstance().getReference().child("Buddies");
         currentUserID=mAuth.getCurrentUser().getUid();
         userRef=FirebaseDatabase.getInstance().getReference().child("Users");
-        myBuddyList.setLayoutManager(new LinearLayoutManager(getContext()));
+        myBuddyList.setLayoutManager(new LinearLayoutManager(getContext()));        // setting linear layout for recycler .
 
         fab_add_buddy=buddyView.findViewById(R.id.fab_add_buddy);
         editTextSearch=buddyView.findViewById(R.id.search_user);
@@ -88,9 +88,9 @@ public class BuddiesFragment extends Fragment {
 
         FirebaseRecyclerAdapter<User, ViewHolder>adapter=new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull final ViewHolder holder, int postion, @NonNull User user) {
-
-                textViewNothing.setVisibility(View.GONE);
+            protected void onBindViewHolder(@NonNull final ViewHolder holder, int postion, @NonNull User user) {  //at last
+                                                                                                            // what happens actually
+                textViewNothing.setVisibility(View.GONE);                                                    // in view.
 
                 final String usersIDs=getRef(postion).getKey();
 
@@ -137,7 +137,7 @@ public class BuddiesFragment extends Fragment {
 
             @NonNull
             @Override
-            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {   // create the view.
                 View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.buddies_display_layout,parent,false);
                 return new ViewHolder(view);
             }

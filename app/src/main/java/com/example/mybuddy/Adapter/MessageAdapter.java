@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -93,12 +94,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChild("messageSeen")){
-                        if(dataSnapshot.child("messageSeen").getValue().toString().equals("true")){
-                            holder.txt_seen.setText("seen");
-                        }
-                        else{
-                            holder.txt_seen.setText("Delivered");
-                        }
+
+                        holder.txt_seen.setText(dataSnapshot.child("messageSeen").getValue().toString());
                     }
                 }
 

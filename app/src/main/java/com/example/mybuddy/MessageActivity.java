@@ -109,20 +109,38 @@ public class MessageActivity extends AppCompatActivity {
         chatListRef= FirebaseDatabase.getInstance().getReference().child("ChatList");
         currentUserID=fuser.getUid();
 
+        intent=getIntent();
+
+        userid=intent.getStringExtra("id");
+
         userRef.child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 currentUserName=snapshot.child("name").getValue().toString();
+            }
+                                                                                                        // these are the two types of value event listener
+            @Override                                                                                     //which we are going to use .
+            public void onCancelled(@NonNull DatabaseError error) {                                     //  for accesing the values from firebase.
+
+            }
+        });
+
+        listener2=new ValueEventListener() {                                                         //Both ways can be used.
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    chatListRef.child(userid).child(fuser.getUid()).child("messageSeen").setValue("Seen");
+                    //chatListRef.child(userid).child(fuser.getUid()).child("unseenMsgCount").setValue("0");
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
-        intent=getIntent();
+        };
+        chatListRef.child(userid).child(fuser.getUid()).addValueEventListener(listener2);
 
-        userid=intent.getStringExtra("id");
 
         loadingBar=new ProgressDialog(MessageActivity.this);
 
@@ -150,13 +168,17 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String msg=text_send.getText().toString();
-                if(!equals("") && msg.trim().length()>0){       // we trim message to remove wide Spaces.
-                    sendMessage(currentUserID,userid,msg);
+                if (LoginActivity.isNetworkAvilable(MessageActivity.this)) {
+                    String msg = text_send.getText().toString();
+                    if (!equals("") && msg.trim().length() > 0) {       // we trim message to remove wide Spaces.
+                        sendMessage(currentUserID, userid, msg);
+                    } else
+                        Toast.makeText(MessageActivity.this, "You can't Send empty Message", Toast.LENGTH_SHORT).show();
+                    text_send.setText("");
                 }
-                else
-                    Toast.makeText(MessageActivity.this, "You can't Send empty Message", Toast.LENGTH_SHORT).show();
-                text_send.setText("");
+                else {
+                    Toast.makeText(MessageActivity.this, "Make sure your data connection is ON", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -174,32 +196,44 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("receiver",receiver);
         hashMap.put("message",message);
         hashMap.put("date",timeInMillis+"");
+
+        chatListRef.child(sender).child(receiver).child("messageSeen").setValue("Sending...");
         chatRef.child(sender).push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
-                chatRef.child(receiver).push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        chatListRef.child(sender).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(!snapshot.hasChild(receiver)){
+                if (task.isSuccessful()) {
 
-                                    chatListRef.child(sender).child(receiver).child("NameForSearch").setValue(userNameForSearch);
-                                    chatListRef.child(receiver).child(sender).child("NameForSearch").setValue(currentUserName);
-                                }
-                                chatListRef.child(sender).child(receiver).child("Time").setValue(timeInMillis);
-                                chatListRef.child(receiver).child(sender).child("Time").setValue(timeInMillis);
+                    chatRef.child(receiver).push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if (task.isSuccessful()) {
+
+                                chatListRef.child(sender).child(receiver).child("messageSeen").setValue("delivered");
+                                chatListRef.child(sender).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (!snapshot.hasChild(receiver)) {
+
+                                            chatListRef.child(sender).child(receiver).child("NameForSearch").setValue(userNameForSearch);
+                                            chatListRef.child(receiver).child(sender).child("NameForSearch").setValue(currentUserName);
+                                        }
+                                        chatListRef.child(sender).child(receiver).child("Time").setValue(timeInMillis);
+                                        chatListRef.child(receiver).child(sender).child("Time").setValue(timeInMillis);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
+                        }
+                    });
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                });
+                }
 
             }
         });
@@ -289,6 +323,24 @@ public class MessageActivity extends AppCompatActivity {
             }
         };
         userRef.child(userid).addValueEventListener(listener4);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        chatListRef.child(userid).child(fuser.getUid()).removeEventListener(listener2);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        chatListRef.child(userid).child(fuser.getUid()).addValueEventListener(listener2);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        chatListRef.child(userid).child(fuser.getUid()).removeEventListener(listener2);
     }
 }
 
